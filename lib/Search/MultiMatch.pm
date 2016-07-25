@@ -4,9 +4,9 @@ use 5.010;
 use strict;
 use warnings;
 
-=head1 NAME
-
 =encoding utf8
+
+=head1 NAME
 
 Search::MultiMatch - An efficient, tree-based, 2D multimatcher.
 
