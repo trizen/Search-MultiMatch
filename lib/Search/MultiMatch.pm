@@ -245,7 +245,7 @@ and how to search the table with a given pattern at a later time:
     }
 
     my $pattern = make_key('i love');        # make the search-pattern
-    my @matches = $smm->search($pattern);    # search for the pattern
+    my @matches = $smm->search($pattern);    # search by the pattern
 
     pp \@matches;                            # dump the results
 
