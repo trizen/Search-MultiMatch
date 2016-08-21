@@ -82,13 +82,14 @@ Example:
 sub add {
     my ($self, $key, $value) = @_;
 
+    my $vref = \$value;
     my $table = $self->{table};
 
     foreach my $group (@$key) {
         my $ref = $table;
         foreach my $item (@$group) {
             $ref = $ref->{$item} //= {};
-            push @{$ref->{values}}, \$value;
+            push @{$ref->{values}}, $vref;
         }
     }
 
