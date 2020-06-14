@@ -5,14 +5,14 @@ use utf8;
 use warnings FATAL => 'all';
 use Test::More;
 
-plan tests => 6;
+plan tests => 7;
 
 use_ok('Search::MultiMatch') || print "Bail out!\n";
 
 my $smm = Search::MultiMatch->new();
 
 sub make_key {
-    [map { [split //] } split(' ', lc($_[0]))];
+    [[split(' ', lc($_[0]))]];
 }
 
 my @movies = (
@@ -45,16 +45,8 @@ sub search {
 ## Default matching
 #
 {
-    my @matches = search('i love');
-
-    my @expect = (
-                  {match => 'P.S. I Love You (2007)',      score => 2},
-                  {match => 'My First Lover',              score => 1},
-                  {match => 'A Lot Like Love',             score => 1},
-                  {match => 'Love Actually (2003)',        score => 1},
-                  {match => 'From Paris with Love (2010)', score => 1},
-                 );
-
+    my @matches = search('some values here');
+    my @expect  = ({match => 'some values here', score => 1});
     is_deeply(\@matches, \@expect);
 }
 
@@ -62,9 +54,8 @@ sub search {
 ## Best matching
 #
 {
-    my @matches = search('i love', keep => 'best');
-    my @expect  = ({match => 'P.S. I Love You (2007)', score => 2});
-
+    my @matches = search('my first', keep => 'best');
+    my @expect  = ({match => 'My First Lover', score => 1});
     is_deeply(\@matches, \@expect);
 }
 
@@ -72,9 +63,17 @@ sub search {
 ## Best matching
 #
 {
-    my @matches = search('(2003) actually lo', keep => 'best');
-    my @expect  = ({match => 'Love Actually (2003)', score => 3});
+    my @matches = search('The', keep => 'best');
+    my @expect  = ({match => 'The Lookout (2007)', score => 1}, {match => 'The Mothman Prophecies', score => 1},);
+    is_deeply(\@matches, \@expect);
+}
 
+#
+## Any matching
+#
+{
+    my @matches = search('The', keep => 'any');
+    my @expect  = ({match => 'The Lookout (2007)', score => 1}, {match => 'The Mothman Prophecies', score => 1},);
     is_deeply(\@matches, \@expect);
 }
 
@@ -83,14 +82,7 @@ sub search {
 #
 {
     my @matches = search('love berlin', keep => 'any');
-    my @expect = (
-                  {match => "My First Lover",              score => 1},
-                  {match => "A Lot Like Love",             score => 1},
-                  {match => "Love Actually (2003)",        score => 1},
-                  {match => "From Paris with Love (2010)", score => 1},
-                  {match => "P.S. I Love You (2007)",      score => 1},
-                 );
-
+    my @expect  = ();
     is_deeply(\@matches, \@expect);
 }
 

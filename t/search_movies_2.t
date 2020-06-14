@@ -12,7 +12,7 @@ use_ok('Search::MultiMatch') || print "Bail out!\n";
 my $smm = Search::MultiMatch->new();
 
 sub make_key {
-    [map { [split //] } split(' ', lc($_[0]))];
+    [map { [$_] } split(' ', lc($_[0]))];
 }
 
 my @movies = (
@@ -49,7 +49,6 @@ sub search {
 
     my @expect = (
                   {match => 'P.S. I Love You (2007)',      score => 2},
-                  {match => 'My First Lover',              score => 1},
                   {match => 'A Lot Like Love',             score => 1},
                   {match => 'Love Actually (2003)',        score => 1},
                   {match => 'From Paris with Love (2010)', score => 1},
@@ -64,7 +63,6 @@ sub search {
 {
     my @matches = search('i love', keep => 'best');
     my @expect  = ({match => 'P.S. I Love You (2007)', score => 2});
-
     is_deeply(\@matches, \@expect);
 }
 
@@ -72,9 +70,8 @@ sub search {
 ## Best matching
 #
 {
-    my @matches = search('(2003) actually lo', keep => 'best');
-    my @expect  = ({match => 'Love Actually (2003)', score => 3});
-
+    my @matches = search('actually love', keep => 'best');
+    my @expect  = ({match => 'Love Actually (2003)', score => 2});
     is_deeply(\@matches, \@expect);
 }
 
@@ -84,13 +81,11 @@ sub search {
 {
     my @matches = search('love berlin', keep => 'any');
     my @expect = (
-                  {match => "My First Lover",              score => 1},
                   {match => "A Lot Like Love",             score => 1},
                   {match => "Love Actually (2003)",        score => 1},
                   {match => "From Paris with Love (2010)", score => 1},
                   {match => "P.S. I Love You (2007)",      score => 1},
                  );
-
     is_deeply(\@matches, \@expect);
 }
 

@@ -10,3 +10,5 @@ t/manifest.t
 t/pod-coverage.t
 t/pod.t
 t/search_movies.t
+t/search_movies_2.t
+t/search_movies_3.t

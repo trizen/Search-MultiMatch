@@ -82,14 +82,14 @@ Example:
 sub add {
     my ($self, $key, $value) = @_;
 
-    my $vref = \$value;
+    my $vref  = \$value;
     my $table = $self->{table};
 
     foreach my $group (@$key) {
         my $ref = $table;
         foreach my $item (@$group) {
             $ref = $ref->{$item} //= {};
-            push @{$ref->{values}}, $vref;
+            push @{$ref->{$ref}}, $vref;
         }
     }
 
@@ -164,7 +164,7 @@ sub search {
     my ($self, $pattern, %opt) = @_;
 
     my $table = $self->{table};
-    my $keep = $opt{keep} // '';
+    my $keep  = $opt{keep} // '';
 
     my (@matches, %seen);
 
@@ -181,8 +181,8 @@ sub search {
             }
         }
 
-        if (defined($ref) and exists($ref->{values})) {
-            foreach my $match (@{$ref->{values}}) {
+        if (defined($ref) and exists($ref->{$ref})) {
+            foreach my $match (@{$ref->{$ref}}) {
                 if (not exists $seen{$match}) {
                     $seen{$match} = 1;
                     push @matches, $match;
