@@ -16,6 +16,9 @@ WriteMakefile(
               CONFIGURE_REQUIRES => {
                                      'ExtUtils::MakeMaker' => 0,
                                     },
+
+			  (MM->can('signature_target') ? (SIGN => 1) : ()),
+
               BUILD_REQUIRES => {
                                  'Test::More' => 0,
                                 },
